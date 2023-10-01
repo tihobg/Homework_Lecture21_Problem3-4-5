@@ -3,7 +3,7 @@ from typing import List
 
 class Book:
     def __init__(self,
-                 number,
+                 number: 0,
                  book,
                  author,
                  year):
@@ -13,7 +13,7 @@ class Book:
         self._year = year
 
     @property
-    def number(self):
+    def number(self) -> int:
         return self._number
 
     @property
@@ -29,11 +29,12 @@ class Book:
         return self._year
 
     def __str__(self) -> str:
-        return f"""Number: {self._number}
-Book: {self._book}
-Author: {self.author}
-Year Revised: {self.year}
-"""
+        return f"{self._number} {self._book} {self._author} {self._year}"
+#         return f"""Number: {self._number}
+# Book: {self._book}
+# Author: {self.author}
+# Year Revised: {self.year}
+# """
 
-    def serialize(self) -> List:
-        return [self._number, self._book, self.author, self.year]
+    # def serialize(self) -> List:
+    #     return [self._number, self._book, self.author, self.year]

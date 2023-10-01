@@ -1,68 +1,37 @@
 # problem 3, 4, 5
-import csv
-from book import Book
-from ui import insert_new_list_books
 
-books = [
-    Book('0', 'To Kill A Mockingbird', 'Harper Lee', '1960'),
-    Book('1', 'A Brief History of Time', 'Stephen Hawking', '1988'),
-    Book('2', 'The Great Gatsby', 'F.Scott Fitzgerald', '1922')
-]
-print([str(b) for b in books])
-with open('Book.csv', 'w') as f:
-    writer = csv.writer(f)
-    writer.writerow([' ', 'Book', 'Author', 'Year Released'])
-    for b in books:
-        writer.writerow([b.number, b.book, b.author, b.year])
-        print(b)
+from ui import insert_new_list_books, load_from_csv_file, write_data_to_csv_file, load_preferred_author_books,\
+    find_books_start_end_year, edit_book_line
+from user_input_handler import num_books_to_insert, book_insert_author, no_book_author_preferred,\
+    insert_start_end_pub_year, insert_delete_book_line, insert_edit_reply
+from BOOKS import BOOKS
 
-number_new_books = int(input('Please, enter how many books to insert?\n'))
-new_l_b = insert_new_list_books(books, number_new_books)
+write_data_to_csv_file(BOOKS)
+start_book_list = load_from_csv_file()
+print()
+number_new_books = num_books_to_insert()
+print()
+print(*start_book_list, sep='\n')
+print()
+new_l_b = insert_new_list_books(number_new_books)
+total_list = start_book_list + new_l_b
+write_data_to_csv_file(total_list)
+new_book_list = load_from_csv_file()
+print()
+book_author_insert = book_insert_author()
 
-with open('Book.csv', 'w') as f:
-    writer = csv.writer(f)
-    writer.writerow([' ', 'Book', 'Author', 'Year Released'])
-    for b in books:
-        writer.writerow([b.number, b.book, b.author, b.year])
-    for b in range(number_new_books):
-        writer.writerow([new_l_b[b].number + len(books) - 1 + b, new_l_b[b].book, new_l_b[b].author, new_l_b[b].year])
+author_list = load_preferred_author_books(book_author_insert)
+no_book_author_preferred(author_list)
+print()
+start_end_year = insert_start_end_pub_year()
 
-book_author_insert = input('Please, insert the book author preferred:\n')
-with open('Book.csv', 'r') as f:
-    reader = csv.reader(f)
-    author_list = []
-    for line in reader:
-        if line[2] == book_author_insert:
-            content = line
-            author_list.append(content)
-    print(author_list)
-    if len(author_list) == 0:
-        print('There is no book written by this author!\n')
+find_books_start_end_year(start_end_year)
 
-book_start_year = int(input('Please, insert the start publishing year of the book!\n'))
-book_end_year = int(input('Please, insert the end publishing year!\n'))
-print(type(book_start_year))
+delete_book = insert_delete_book_line()
 
-with open('Book.csv', 'r') as f:
-    reader = csv.reader(f)
-    list_data_books = []
-    for line in reader:
-        list_data_books.append(line)
-    books_no_row_title = list_data_books[1::]
-    book_year_list = []
-    for line in books_no_row_title:
-        if book_start_year <= int(line[3]) <= book_end_year:
-            content = line
-            book_year_list.append(content)
-    if book_year_list:
-        print(book_year_list)
-    else:
-        print('There is no books from this author written between these years!\n')
+new_book_list.pop(delete_book)
+write_data_to_csv_file(new_book_list)
+new_l_b = load_from_csv_file()
 
-
-with open('Book.csv', 'r') as f:
-    reader = csv.reader(f)
-    content = [line for line in reader if len(line) > 0]
-    for row in content:
-        print(row)
-    # print(content)
+edit_reply = insert_edit_reply()
+edit_book_line(edit_reply)
